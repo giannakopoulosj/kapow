@@ -256,10 +256,10 @@ func setServerLog(w http.ResponseWriter, r *http.Request, h *model.Handler) {
 
 // function to scape strings in order to be printed in a Log
 func escapeString(s string) string {
-  s = strings.Replace(s, "\n", "", -1)
-  s = strings.Replace(s, "\r", "", -1)
-  s = strings.Replace(s, "\t", "", -1)
-  s = strings.Replace(s, "\b", "", -1)
+	s = strings.ReplaceAll(s, "\n", "")
+	s = strings.ReplaceAll(s, "\r", "")
+	s = strings.ReplaceAll(s, "\t", "")
+	s = strings.ReplaceAll(s, "\b", "")
 
-  return s
+	return s
 }

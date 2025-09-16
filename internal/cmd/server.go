@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strings"
 	"sync"
@@ -61,7 +62,7 @@ var ServerCmd = &cobra.Command{
 	admin interface`,
 	PreRunE: validateServerCommandArguments,
 	Run: func(cmd *cobra.Command, args []string) {
-		var sConf server.ServerConfig = server.ServerConfig{}
+		sConf := server.ServerConfig{}
 		sConf.UserBindAddr, _ = cmd.Flags().GetString("bind")
 		sConf.ControlBindAddr, _ = cmd.Flags().GetString("control-bind")
 		sConf.DataBindAddr, _ = cmd.Flags().GetString("data-bind")
@@ -80,10 +81,18 @@ var ServerCmd = &cobra.Command{
 
 		// Set environment variables KAPOW_DATA_URL and KAPOW_CONTROL_URL only if they aren't set so we don't overwrite user's preferences
 		if _, exist := os.LookupEnv("KAPOW_DATA_URL"); !exist {
-			os.Setenv("KAPOW_DATA_URL", "http://"+sConf.DataBindAddr)
+			// Check the error returned by os.Setenv
+			if err := os.Setenv("KAPOW_DATA_URL", "http://"+sConf.DataBindAddr); err != nil {
+				// Log the error for debugging purposes
+				log.Printf("error setting KAPOW_DATA_URL environment variable: %v", err)
+			}
 		}
 		if _, exist := os.LookupEnv("KAPOW_CONTROL_URL"); !exist {
-			os.Setenv("KAPOW_CONTROL_URL", "https://"+controlReachableAddr)
+			// Check the error returned by os.Setenv
+			if err := os.Setenv("KAPOW_CONTROL_URL", "https://"+controlReachableAddr); err != nil {
+				// Log the error for debugging purposes
+				log.Printf("error setting KAPOW_CONTROL_URL environment variable: %v", err)
+			}
 		}
 		banner()
 
@@ -141,7 +150,7 @@ func validateServerCommandArguments(cmd *cobra.Command, args []string) error {
 	if cert == "" {
 		// If we don't serve thru https client authentication can't be enabled
 		if cliAuth {
-			return errors.New("Client authentication can't be active in a non https server")
+			return errors.New("client authentication can't be active in a non https server")
 		}
 	}
 

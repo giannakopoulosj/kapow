@@ -28,16 +28,17 @@ import (
 )
 
 func Spawn(h *model.Handler, stdout io.Writer, stderr io.Writer) error {
-	if h.Route.Entrypoint == "" {
-		return errors.New("Entrypoint cannot be empty")
+	//if h.Route.Entrypoint == "" {
+	if h.Entrypoint == "" {
+		return errors.New("entrypoint cannot be empty")
 	}
-	args, err := shlex.Split(h.Route.Entrypoint)
+	args, err := shlex.Split(h.Entrypoint)
 	if err != nil {
 		return err
 	}
 
-	if h.Route.Command != "" {
-		args = append(args, h.Route.Command)
+	if h.Command != "" {
+		args = append(args, h.Command)
 	}
 
 	cmd := exec.Command(args[0], args[1:]...)

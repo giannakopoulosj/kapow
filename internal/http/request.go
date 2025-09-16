@@ -21,6 +21,7 @@ import (
 	"crypto/x509"
 	"errors"
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -80,7 +81,11 @@ func Request(method string, url string, r io.Reader, w io.Writer, clientGenerato
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
+	defer func() {
+		if err := res.Body.Close(); err != nil {
+			log.Printf("error closing response body: %v", err)
+		}
+	}()
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		reason, err := Reason(res)
@@ -131,7 +136,7 @@ func GenControlHTTPSClient() *http.Client {
 		Certificates: []tls.Certificate{clientTLSCert},
 		RootCAs:      serverCertPool,
 	}
-	tlsConfig.BuildNameToCertificate()
+	//tlsConfig.BuildNameToCertificate()  SA1019: Deprecated API Usage
 	transport := &http.Transport{TLSClientConfig: tlsConfig}
 	client := &http.Client{Transport: transport}
 

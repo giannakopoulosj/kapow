@@ -1,3 +1,4 @@
+//go:build !race
 // +build !race
 
 /*
@@ -19,6 +20,7 @@
 package mux
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -238,7 +240,9 @@ func TestUpdateUpdatesMuxWithProvideRouteList(t *testing.T) {
 			Command:    "jaillover > /tmp/kapow-test-update-mux",
 		},
 	}
-	os.Remove("/tmp/kapow-test-update-mux")
+	if err := os.Remove("/tmp/kapow-test-update-mux"); err != nil && !os.IsNotExist(err) {
+		log.Printf("failed to remove file: %v", err)
+	}
 	defer os.Remove("/tmp/kapow-test-update-mux")
 
 	sm.Update(rs)
