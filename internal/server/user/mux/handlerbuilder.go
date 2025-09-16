@@ -54,18 +54,29 @@ func handlerBuilder(route model.Route) http.Handler {
 		if route.Debug {
 			var stdOutR, stdOutW *os.File
 			stdOutR, stdOutW, err = os.Pipe()
-			defer stdOutW.Close()
 			if err != nil {
 				logger.L.Println(err)
 				return
 			}
+			// FIX: Check the error on Close
+			defer func() {
+				if err := stdOutW.Close(); err != nil {
+					logger.L.Printf("failed to close stdout writer for handler %s: %v", h.ID, err)
+				}
+			}()
+
 			var stdErrR, stdErrW *os.File
 			stdErrR, stdErrW, err = os.Pipe()
-			defer stdErrW.Close()
 			if err != nil {
 				logger.L.Println(err)
 				return
 			}
+			// FIX: Check the error on Close
+			defer func() {
+				if err := stdErrW.Close(); err != nil {
+					logger.L.Printf("failed to close stderr writer for handler %s: %v", h.ID, err)
+				}
+			}()
 
 			go logStream(h.ID, "stdout", stdOutR)
 			go logStream(h.ID, "stderr", stdErrR)
@@ -105,7 +116,13 @@ func handlerBuilder(route model.Route) http.Handler {
 }
 
 func logStream(handlerId string, streamName string, stream *os.File) {
-	defer stream.Close()
+	// FIX: Check the error on Close
+	defer func() {
+		if err := stream.Close(); err != nil {
+			logger.L.Printf("failed to close %s stream for handler %s: %v", streamName, handlerId, err)
+		}
+	}()
+
 	scanner := bufio.NewScanner(stream)
 	for scanner.Scan() {
 		logger.L.Printf("%s %s: %s", handlerId, streamName, scanner.Text())

@@ -94,7 +94,7 @@ func loadCertificatesFromFile(certFile string) (pool *x509.CertPool, err error) 
 		if err == nil {
 			pool = x509.NewCertPool()
 			if !pool.AppendCertsFromPEM(caCerts) {
-				err = fmt.Errorf("Invalid certificate file %s", certFile)
+				err = fmt.Errorf("invalid certificate file %s", certFile)
 			}
 		}
 	}

@@ -119,8 +119,9 @@ func TestSpawnSetsKapowURLEnvVar(t *testing.T) {
 	}
 	out := &bytes.Buffer{}
 
-	os.Setenv("KAPOW_DATA_URL", "http://localhost:8082")
-
+	if err := os.Setenv("KAPOW_DATA_URL", "http://localhost:8082"); err != nil {
+		log.Printf("failed to set environment variable: %v", err)
+	}
 	_ = Spawn(h, out, nil)
 
 	os.Unsetenv("KAPOW_DATA_URL")

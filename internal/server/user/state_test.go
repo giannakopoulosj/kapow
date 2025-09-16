@@ -1,3 +1,4 @@
+//go:build !race
 // +build !race
 
 /*
@@ -19,6 +20,7 @@
 package user
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -349,7 +351,10 @@ func TestDeleteUpdatesMuxWithRemainingRoutes(t *testing.T) {
 			Command:    "jaillover > /tmp/kapow-test-remove-updates-mux",
 		},
 	)
-	os.Remove("/tmp/kapow-test-remove-updates-mux")
+	if err := os.Remove("/tmp/kapow-test-remove-updates-mux"); err != nil && !os.IsNotExist(err) {
+		log.Printf("failed to remove file: %v", err)
+	}
+
 	defer os.Remove("/tmp/kapow-test-remove-updates-mux")
 
 	_ = srl.Delete(route.ID)

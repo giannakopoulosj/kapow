@@ -25,8 +25,8 @@ import (
 )
 
 type safeRouteList struct {
-	rs []model.Route
-	m  *sync.RWMutex
+	rs          []model.Route
+	m           *sync.RWMutex
 	globalDebug bool
 }
 
@@ -85,7 +85,7 @@ func (srl *safeRouteList) Delete(ID string) error {
 		}
 	}
 	srl.m.Unlock()
-	return errors.New("Route not found")
+	return errors.New("route not found")
 }
 
 func (srl *safeRouteList) Get(ID string) (r model.Route, err error) {
@@ -97,6 +97,6 @@ func (srl *safeRouteList) Get(ID string) (r model.Route, err error) {
 		}
 	}
 
-	err = errors.New("Route not found")
+	err = errors.New("route not found")
 	return
 }
