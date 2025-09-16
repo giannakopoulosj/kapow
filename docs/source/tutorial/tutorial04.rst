@@ -226,3 +226,5 @@ I Need my Report!
   You know me.  Whatever it takes to avoid writing reports ;-)
 
   (both chuckle).
+
+.. _command grouping: https://serverascode.com/2023/03/31/using-bash-script-command-groups.html
