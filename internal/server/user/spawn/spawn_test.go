@@ -124,7 +124,9 @@ func TestSpawnSetsKapowURLEnvVar(t *testing.T) {
 	}
 	_ = Spawn(h, out, nil)
 
-	os.Unsetenv("KAPOW_DATA_URL")
+	if err := os.Unsetenv("KAPOW_DATA_URL"); err != nil {
+		log.Printf("failed to unset environment variable: %v", err)
+	}
 
 	jldata := decodeJailLover(out.Bytes())
 	if v, ok := jldata.Env["KAPOW_DATA_URL"]; !ok || v != "http://localhost:8082" {

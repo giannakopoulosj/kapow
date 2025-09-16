@@ -321,8 +321,16 @@ func TestAppendUpdatesMuxWithProvideRoute(t *testing.T) {
 		Entrypoint: "/bin/sh -c",
 		Command:    "jaillover > /tmp/kapow-test-append-updates-mux",
 	}
-	os.Remove("/tmp/kapow-test-append-updates-mux")
-	defer os.Remove("/tmp/kapow-test-append-updates-mux")
+
+	if err := os.Remove("/tmp/kapow-test-append-updates-mux"); err != nil {
+		log.Printf("failed to remove file: %v", err)
+	}
+	defer func() {
+		if err := os.Remove("/tmp/kapow-test-append-updates-mux"); err != nil && !os.IsNotExist(err) {
+			// Log the error if it's something other than the file not existing
+			log.Printf("failed to remove test file /tmp/kapow-test-append-updates-mux: %v", err)
+		}
+	}()
 
 	srl.Append(route)
 

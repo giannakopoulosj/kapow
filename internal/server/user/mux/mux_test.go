@@ -243,7 +243,12 @@ func TestUpdateUpdatesMuxWithProvideRouteList(t *testing.T) {
 	if err := os.Remove("/tmp/kapow-test-update-mux"); err != nil && !os.IsNotExist(err) {
 		log.Printf("failed to remove file: %v", err)
 	}
-	defer os.Remove("/tmp/kapow-test-update-mux")
+	defer func() {
+		if err := os.Remove("/tmp/kapow-test-update-mux"); err != nil && !os.IsNotExist(err) {
+			// Log the error if it's something other than the file not existing
+			log.Printf("failed to remove test file /tmp/kapow-test-update-mux: %v", err)
+		}
+	}()
 
 	sm.Update(rs)
 
