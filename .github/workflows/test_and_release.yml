@@ -107,7 +107,7 @@ jobs:
         username="${{ secrets.DOCKERHUB_USERNAME }}"
         password="${{ secrets.DOCKERHUB_PASSWORD }}"
         echo "$password" | docker login --username "$username" --password-stdin
-    - uses: goreleaser/goreleaser-action@v6.0.0
+    - uses: goreleaser/goreleaser-action@v6.4.0
       with:
         args: release --rm-dist ${{ steps.release-notes.outputs.ARGS }}
       env:
