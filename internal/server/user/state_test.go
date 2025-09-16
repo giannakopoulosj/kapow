@@ -363,7 +363,12 @@ func TestDeleteUpdatesMuxWithRemainingRoutes(t *testing.T) {
 		log.Printf("failed to remove file: %v", err)
 	}
 
-	defer os.Remove("/tmp/kapow-test-remove-updates-mux")
+	defer func() {
+		if err := os.Remove("/tmp/kapow-test-remove-updates-mux"); err != nil && !os.IsNotExist(err) {
+			// Log the error if it's something other than the file not existing
+			log.Printf("failed to remove test file /tmp/kapow-test-remove-updates-mux: %v", err)
+		}
+	}()
 
 	_ = srl.Delete(route.ID)
 
