@@ -230,6 +230,10 @@ func setResponseBody(w http.ResponseWriter, r *http.Request, h *model.Handler) {
 		h.BodyOut = true
 	}
 
+	// Mitigate XSS: Set Content-Type to text/plain unless already set
+	if h.Writer.Header().Get("Content-Type") == "" {
+		h.Writer.Header().Set("Content-Type", "text/plain")
+	}
 	n, err := io.Copy(h.Writer, r.Body)
 	if err != nil {
 		if n > 0 {
