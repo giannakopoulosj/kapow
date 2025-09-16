@@ -226,5 +226,3 @@ I Need my Report!
   You know me.  Whatever it takes to avoid writing reports ;-)
 
   (both chuckle).
-
-.. _command grouping: https://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html
