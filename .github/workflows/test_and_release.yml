@@ -130,7 +130,7 @@ jobs:
     steps:
     - uses: actions/checkout@v5.0.0
     - name: Download a single artifact
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@v6
       with:
         name: binaries
     - name: Install NSIS
