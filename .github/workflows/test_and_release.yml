@@ -5,7 +5,7 @@ jobs:
   unit-test:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v7.0.1
     - name: Load Go version
       id: go-version
       run: |
@@ -19,7 +19,7 @@ jobs:
   lint:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v7.0.1
     - uses: actions/setup-go@v6
       with:
         go-version: ${{ steps.go-version.outputs.go-version }}
@@ -30,7 +30,7 @@ jobs:
   spec-test:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v7.0.1
     - name: Load Go version
       id: go-version
       run: |
@@ -51,7 +51,7 @@ jobs:
   doc-test:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v7.0.1
       with:
         # Set fetch-depth to 0 to get all tags for 'git describe'
         fetch-depth: 0
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [ unit-test, spec-test, doc-test, lint ]
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v7.0.1
       with:
         fetch-depth: 0
     - name: Load Go version
@@ -128,7 +128,7 @@ jobs:
       matrix:
         binary: ["kapow_windows_386", "kapow_windows_amd64_v1"]
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v7.0.1
     - name: Download a single artifact
       uses: actions/download-artifact@v6
       with:
